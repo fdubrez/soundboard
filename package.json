@@ -1,0 +1,14 @@
+{
+  "private": true,
+  "name": "soundboard",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.mjs",
+  "scripts": {
+    "start": "node index.mjs",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "fdubrez",
+  "license": "WTFPL"
+}
