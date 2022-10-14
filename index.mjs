@@ -2,6 +2,7 @@ import * as fs from 'node:fs';
 import * as http from 'node:http';
 import * as path from 'node:path';
 import { Readable } from 'node:stream';
+import sound from './src/sound.mjs'
 
 
 const PORT = 8000;
@@ -48,14 +49,17 @@ const buildIndex = (sounds) => {
 </html>`
 }
 
-const playSound = ({theme, title, filename}) => {
-    // todo
+const playSound = async ({theme, title, filename}) => {
+    await sound.play(path.join(process.cwd(), `./static/medias/music/${filename}`))
 }
+
+const pattern = /\/play\/(?<theme>.*)\/(?<title>.*)/
 
 const prepareFile = async (url) => {
     const paths = [STATIC_PATH, url];
     if (url.startsWith('/play')) {
-        playSound(sounds[0]);
+        const matches = url.match(pattern)
+        playSound(sounds.filter(({title, theme}) => title === matches.groups["title"] && theme === matches.groups["theme"])[0]);
         const stream = Readable()
         stream.push(JSON.stringify({status: "OK"}))
         stream.push(null) 
@@ -80,7 +84,7 @@ const prepareFile = async (url) => {
 };
 
 http.createServer(async (req, res) => {
-    const file = await prepareFile(req.url);
+    const file = await prepareFile(decodeURI(req.url));
     const statusCode = file.found ? 200 : 404;
     const mimeType = MIME_TYPES[file.ext] || MIME_TYPES.default;
     res.writeHead(statusCode, { 'Content-Type': mimeType });
