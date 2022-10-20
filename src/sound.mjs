@@ -8,6 +8,8 @@ const execPromise = promisify(exec)
 /* MAC PLAY COMMAND */
 const macPlayCommand = (path, volume) => `afplay \"${path}\" -v ${volume}`
 
+const linuxPlayCommand = (path, volume) => `ffplay -volume ${volume} -loglevel info -nodisp -autoexit \"${path}\"`
+
 /* WINDOW PLAY COMMANDS */
 const addPresentationCore = `Add-Type -AssemblyName presentationCore;`
 const createMediaPlayer = `$player = New-Object system.windows.media.mediaplayer;`
@@ -29,8 +31,21 @@ export default {
      */
     const volumeAdjustedByOS = process.platform === 'darwin' ? Math.min(2, volume * 2) : volume
 
-    const playCommand =
-      process.platform === 'darwin' ? macPlayCommand(path, volumeAdjustedByOS) : windowPlayCommand(path, volumeAdjustedByOS)
+    let playCommand = null
+    switch(process.platform) {
+      case "darwin":
+        playCommand = macPlayCommand(path, volumeAdjustedByOS)
+        break
+      case "windows":
+        playCommand = windowPlayCommand(path, volumeAdjustedByOS)
+        break;
+      case "linux":
+        playCommand = linuxPlayCommand(path, 100)
+        break
+      default:
+        throw new Error("pas de chance")
+    }
+
     try {
       await execPromise(playCommand, {windowsHide: true})
     } catch (err) {
