@@ -6,7 +6,8 @@ const port = process.env.PORT || 8000;
 const app = express()
 
 app.get('/', async (req, res) => {
-    res.json(soundboard.soundList)
+    res
+        .json(Array.from(soundboard.soundList))
 })
 app.get('/play/:sound', async (req, res) => {
     await soundboard.play(req.params.sound)
