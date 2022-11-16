@@ -3,7 +3,8 @@
 ## Getting started
 
 ```
-npx nodemon index.js
+npm install
+npm start
 ```
 
 Server start on port `8000` by default
@@ -13,8 +14,7 @@ You can override server port setting `PORT` environment variable
 ## Usage
 
 * Sounds can be added in `static/medias/music` folder
-* A soundboard can be used in the browser at http://localhost:8000
-* You can also trigger the sound using curl: `curl "http://localhost:8000/play/julien%20lepers/oui"`
+* Trigger the sound using curl: `curl "http://localhost:8000/play/julienlepers-oui"`
 
 ## License
 

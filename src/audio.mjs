@@ -46,10 +46,6 @@ export default {
         throw new Error("pas de chance")
     }
 
-    try {
-      await execPromise(playCommand, {windowsHide: true})
-    } catch (err) {
-      throw err
-    }
+    await execPromise(playCommand, {windowsHide: true})
   },
 }
