@@ -1,9 +1,11 @@
 import express from 'express'
 import 'express-async-errors';
 import soundboard from './src/soundboard.mjs'
+import morgan from 'morgan'
 
 const port = process.env.PORT || 8000;
 const app = express()
+app.use(morgan('tiny'))
 
 app.get('/', async (req, res) => {
     res
