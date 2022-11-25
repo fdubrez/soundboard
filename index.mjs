@@ -5,15 +5,27 @@ import morgan from 'morgan'
 
 const port = process.env.PORT || 8000;
 const app = express()
+
+// log incoming requests
 app.use(morgan('tiny'))
 
-app.get('/', async (req, res) => {
-    res
-        .json(Array.from(soundboard.soundList))
+app.get('/', (req, res) => {
+    res.json(Array.from(soundboard.soundList))
 })
-app.get('/play/:sound', async (req, res) => {
-    await soundboard.play(req.params.sound)
-    res.json({code: 200})
+app.get('/play/:sound', (req, res) => {
+    if (!soundboard.soundList.has(req.params.sound)) {
+        res
+            .status(404)
+            .json({code: 404, message: `unknown sound '${req.params.sound}'`})
+    } else {
+        soundboard.play(req.params.sound)
+        res
+        .writeHead(200, {
+            'Content-Length': Buffer.byteLength(''),
+            'Content-Type': 'text/plain',
+          })
+          .end('')
+    }
 })
 app.use(async (err, req, res, next) => {
     console.error(err.stack)
@@ -22,6 +34,6 @@ app.use(async (err, req, res, next) => {
         .json({message: err.message, code: 500, label: "Internal Server Error"})
 })
 
-app.listen(port, async () => {
+app.listen(port, () => {
     console.log(`Soundboard listening on port ${port}`)
 })

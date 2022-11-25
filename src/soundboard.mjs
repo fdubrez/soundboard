@@ -8,9 +8,9 @@ const sounds = new Set(fs.readdirSync(`${STATIC_PATH}/medias/music`)
     .map(filename => filename.split(".mp3")[0]))
 
 export default {
-    play: async (sound) => {
+    play: (sound) => {
         if (sounds.has(sound)) {
-            await player.play(`${STATIC_PATH}/medias/music/${sound}.mp3`)
+            player.play(`${STATIC_PATH}/medias/music/${sound}.mp3`)
             return
         }
 
